@@ -14,9 +14,9 @@ class Heros(scrapy.Item):
     type = ['Strength','Agility','Intelligence']
     name = scrapy.Field()
     ability = scrapy.Field()
-    counter = scrapy.Field()
-    good_against = scrapy.Field()
-    work_well_with = scrapy.Field()
+    Bad_against = scrapy.Field()
+    Good_against = scrapy.Field()
+    Work_well_with = scrapy.Field()
 
 
 
