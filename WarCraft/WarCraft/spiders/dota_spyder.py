@@ -18,7 +18,8 @@ class DotaSpider(scrapy.Spider):
                     'ability': ability[loop],
                     'bad_against': [*self.parse_bad_against(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))],
                     'good_against': [*self.parse_good_against(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))],
-                    'work_well_with':[*self.parse_work_well_with(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))]
+                    'work_well_with':[*self.parse_work_well_with(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))],
+                    'Roles':[*self.parse_roles(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}"))]
                 }
             loop = loop +1
 
@@ -31,7 +32,11 @@ class DotaSpider(scrapy.Spider):
                 break
             if value.xpath('.//b/a/text()').extract_first() is None:
                 continue
-            yield value.xpath('.//b/a/text()').extract_first()
+            hero = value.xpath('.//b/a/text()').extract_first()
+            pts = len(value.xpath('.//following-sibling::ul')[0].xpath('.//child::li'))
+            yield {
+                hero: pts
+            }
 
 
     def parse_good_against(self,response):
@@ -43,7 +48,11 @@ class DotaSpider(scrapy.Spider):
                 break
             if value.xpath('.//b/a/text()').extract_first() is None:
                 continue
-            yield value.xpath('.//b/a/text()').extract_first()
+            hero = value.xpath('.//b/a/text()').extract_first()
+            pts = len(value.xpath('.//following-sibling::ul')[0].xpath('.//child::li'))
+            yield {
+                hero: pts
+            }
 
 
     def parse_work_well_with(self,response):
@@ -53,3 +62,12 @@ class DotaSpider(scrapy.Spider):
             if value.xpath('.//b/a/text()').extract_first() is None:
                 continue
             yield value.xpath('.//b/a/text()').extract_first()
+
+
+    def parse_roles(self,response):
+        select = Selector(response=response)
+        head = select.xpath('//*[@id="Gameplay"]/parent::*')
+        table = head.xpath('.//following-sibling::table')
+
+        for role in table.xpath('.//tbody/tr[2]/td/child::a[@title="Role"]'):
+            yield role.xpath('text()').extract_first()
