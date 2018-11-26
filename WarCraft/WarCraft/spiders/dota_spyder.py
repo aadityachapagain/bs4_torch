@@ -15,6 +15,7 @@ class DotaSpider(scrapy.Spider):
             for hero in heros.xpath('div'):
                 yield {
                     'hero' : hero.xpath('.//div[1]/a/@title').extract(),
+                    'img_link':hero.xpath('.//div[1]/a/img/@src').extract_first(),
                     'ability': ability[loop],
                     'bad_against': [*self.parse_bad_against(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))],
                     'good_against': [*self.parse_good_against(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))],
