@@ -1,3 +1,3 @@
 import os
-
-os.system("scrapy crawl dmoz")
+os.system("scrapyd")
+os.system("scrapyd-deploy")

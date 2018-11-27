@@ -1,0 +1,14 @@
+setup.py
+WarCraft/__init__.py
+WarCraft/items.py
+WarCraft/middlewares.py
+WarCraft/pipelines.py
+WarCraft/settings.py
+WarCraft/spiders/__init__.py
+WarCraft/spiders/dmoz.py
+WarCraft/spiders/dota_spyder.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt
