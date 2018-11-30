@@ -13,10 +13,13 @@ class Heros(scrapy.Item):
     # name = scrapy.Field()
     type = ['Strength','Agility','Intelligence']
     name = scrapy.Field()
+    img_link = scrapy.Field()
     ability = scrapy.Field()
+    Roles = scrapy.Field()
     Bad_against = scrapy.Field()
     Good_against = scrapy.Field()
     Work_well_with = scrapy.Field()
+
 
 
 

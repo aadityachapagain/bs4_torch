@@ -1,3 +1,3 @@
 import os
-os.system("scrapyd")
-os.system("scrapyd-deploy")
+os.system("scrapy crawl Warcraft")
+

@@ -1,6 +1,7 @@
 import scrapy
 import requests
 from scrapy.selector import Selector
+from WarCraft.items import Heros
 
 
 class DotaSpider(scrapy.Spider):
@@ -9,19 +10,18 @@ class DotaSpider(scrapy.Spider):
 
     def parse(self, response):
         loop = 0
-        ability = ['Strength', 'Agility', 'Intelligence']
         value = response.xpath('//*[@id="mw-content-text"]/div/table[1]/tbody')
         for heros in value.xpath('.//td'):
             for hero in heros.xpath('div'):
-                yield {
-                    'hero' : hero.xpath('.//div[1]/a/@title').extract(),
-                    'img_link':hero.xpath('.//div[1]/a/img/@src').extract_first(),
-                    'ability': ability[loop],
-                    'bad_against': [*self.parse_bad_against(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))],
-                    'good_against': [*self.parse_good_against(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))],
-                    'work_well_with':[*self.parse_work_well_with(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))],
-                    'Roles':[*self.parse_roles(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}"))]
-                }
+                heros = Heros()
+                heros["name"] = hero.xpath('.//div[1]/a/@title').extract()
+                heros['img_link'] = hero.xpath('.//div[1]/a/img/@src').extract_first()
+                heros['ability'] = Heros.type[loop]
+                heros['Bad_against'] = [*self.parse_bad_against(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))]
+                heros['Good_against'] = [*self.parse_good_against(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))]
+                heros['Work_well_with'] = [*self.parse_work_well_with(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}/Counters"))]
+                heros['Roles'] = [*self.parse_roles(requests.get(f"https://dota2.gamepedia.com/{hero.xpath('.//div[1]/a/@title').extract_first().replace(' ','_')}"))]
+                yield heros
             loop = loop +1
 
     def parse_bad_against(self, response):
