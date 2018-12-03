@@ -1,5 +1,6 @@
 from scrapy import signals
 from scrapy import Spider
+import time
 
 
 class DmozSpider(Spider):
@@ -24,4 +25,4 @@ class DmozSpider(Spider):
 
 
     def parse(self, response):
-        pass
+        time.sleep(10)
